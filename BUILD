@@ -1,5 +1,3 @@
-load("//build/bazel/rules/android:rules.bzl", "android_binary")
-
 android_binary(
     name = "Music",
     srcs = glob(["src/**/*.java"]),
@@ -7,6 +5,5 @@ android_binary(
     manifest = "AndroidManifest.xml",
     # TODO(b/179889880): this manual BUILD file exists because these resources,
     # if listed as files, would cross package boundary.
-    resource_files = ["//packages/apps/Music/kotlin:MusicResourceFiles"],
-    target_compatible_with = ["//build/bazel/platforms/os:android"],
+    resource_files = ["//kotlin:MusicResourceFiles"],
 )
