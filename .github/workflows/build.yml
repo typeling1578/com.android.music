@@ -27,8 +27,8 @@ jobs:
       run: |
         echo '${{ secrets.KEYSTORE_FILE_BASE64 }}' | base64 -d > ./keystore.jks
         cp ./bazel-bin/Music_unsigned.apk ./Music.apk
-        $ANDROID_HOME/build-tools/33.0.0/apksigner sign --ks ./keystore.jks -v --v2-signing-enabled true --ks-key-alias ${{ secrets.KEYSTORE_ALIAS }} --ks-pass 'pass:${{ secrets.KEYSTORE_PASS }}' Music.apk
         $ANDROID_HOME/build-tools/33.0.0/zipalign -f -v 4 ./Music.apk ./Music_release.apk
+        $ANDROID_HOME/build-tools/33.0.0/apksigner sign --ks ./keystore.jks -v --v2-signing-enabled true --ks-key-alias ${{ secrets.KEYSTORE_ALIAS }} --ks-pass 'pass:${{ secrets.KEYSTORE_PASS }}' Music_release.apk
 
     - name: 🎁 Publish
       uses: actions/upload-artifact@master
