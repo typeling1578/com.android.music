@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - uses: actions/checkout@v3
+      name: 🧬 Clone
+
+    - name: 🔨 Build
+      run: |
+        cat <<EOF > WORKSPACE
+        android_sdk_repository(
+            name = "androidsdk",
+            path = "${ANDROID_HOME}",
+            api_level = 33,
+        )
+        EOF
+        bazel build :Music
+
+    - name: ✍️ Sign
+      run: |
+        echo '${{ secrets.KEYSTORE_FILE_BASE64 }}' | base64 -d > ./keystore.jks
+        cp ./bazel-bin/Music_unsigned.apk ./Music.apk
+        $ANDROID_HOME/build-tools/33.0.0/apksigner sign --ks ./keystore.jks -v --v2-signing-enabled true --ks-key-alias ${{ secrets.KEYSTORE_ALIAS }} --ks-pass 'pass:${{ secrets.KEYSTORE_PASS }}' Music.apk
+        $ANDROID_HOME/build-tools/33.0.0/zipalign -f -v 4 ./Music.apk ./Music_release.apk
+
+    - name: 🎁 Publish
+      uses: actions/upload-artifact@master
+      with:
+        name: com.android.music
+        path: ./Music_release.apk
