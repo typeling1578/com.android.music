@@ -1,0 +1,36 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.android.music'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.android.music"
+        minSdk 8
+        targetSdk 24
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            aidl.srcDirs = ["src/main/java/com/android/music"]
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard.flags'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+}
